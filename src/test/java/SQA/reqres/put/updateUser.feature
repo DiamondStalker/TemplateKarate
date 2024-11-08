@@ -6,6 +6,7 @@ Feature: Actualizar usuario existente
 
   Scenario Outline: Actualizar usuario
     Given path `api/users/`
+    request
     When method Put
     Then  status 200
 
