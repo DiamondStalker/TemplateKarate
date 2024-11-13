@@ -27,8 +27,9 @@ sourceSets {
 test {
     useJUnitPlatform()
     systemProperty "karate.options", System.properties.getProperty("karate.options")
-    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    systemProperty "karate-config.js", System.properties.getProperty("karate-config.js")
     outputs.upToDateWhen { false }
+
 }
 
 task karateDebug(type: JavaExec) {
