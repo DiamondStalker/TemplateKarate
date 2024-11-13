@@ -12,8 +12,8 @@ Feature: Testeo Movistar Music
     """
     {
       "amountPackage": "<Recarga>",
-      "purchaseDate": "2024-10-31T05:22:00Z",
-      "referenceId": "9190",
+      "purchaseDate": "2024-11-12T05:19:00Z",
+      "referenceId": "9898",
       "requestId": "<ID>",
       "serviceNumber": "<SUBSCRIBER_NUMBER>"
     }
@@ -28,15 +28,15 @@ Feature: Testeo Movistar Music
 
 
     # Query the PostgreSQL database
-    * def dbConfig = { username: '', password: '', url: '' }
+    * def dbConfig = { username: 'user_app_nebula', password: '$Umdk50$gkZ&1X>y', url: 'jdbc:postgresql://10.86.55.153:31168/proyectonebula2' }
     * def dbQuery = `SELECT response FROM logger.tbl_logger_subject where  logger.tbl_logger_subject.transaction_id = '${transaction_id}'`
     * def result = karate.callSingle('classpath:SQA/reqres/nats/karate-postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
     #Espesificar una columna en concreto para no traer toda la informacion y no tener tiempos de carga largos
-     * def result = Java.type('org.example.DbUtils').executeQuery(dbConfig.url, dbConfig.username, dbConfig.password, dbQuery, 'response')
 
 
     # * print result
-    * print result.result.response
+    * print "========"
+    * print result
 
     # Validar que el campo 'mensaje' contenga la palabra 'exitoso'
     * match result.result.response contains 'Exitoso'
@@ -44,8 +44,7 @@ Feature: Testeo Movistar Music
 
     Examples:
       | ID         | SUBSCRIBER_NUMBER | Recarga |
-      | 458721680  | 3150000019        | 6000    |
-      | 2068800556 | 3168435409        | 12000   |
+      | 458699652  | 3184823023        | 18000    |
 
 
   Scenario Outline: Volver a cargar la información y validar que no se reprocese
@@ -58,14 +57,14 @@ Feature: Testeo Movistar Music
     Then status 200
 
   # Realizar una nueva consulta a la base de datos para verificar si la solicitud fue reprocesada
-    * def dbConfig = { username: '', password: '', url: '' }
+    * def dbConfig = { username: 'user_app_nebula', password: '$Umdk50$gkZ&1X>y', url: 'jdbc:postgresql://10.86.55.153:31168/proyectonebula2' }
     * def dbQuery = `SELECT "content" FROM logger.tbl_multi_subject where logger.tbl_multi_subject.transaction_id = 'a38720d4-3030-4c42-9bd1-e55583776ebd'`
     * def result = Java.type('org.example.DbUtils').executeQuery(dbConfig.url, dbConfig.username, dbConfig.password, dbQuery, 'content')
 
     * print result
 
   # Verificar que la cuenta de registros sea 1, indicando que no se reprocesó
-     * match result.count == 1
+    * match result.count == 1
 
 
     Examples:
