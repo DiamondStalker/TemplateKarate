@@ -22,29 +22,40 @@ Feature: Testeo Movistar Music
     When method POST
     Then status 200
     * def transaction_id = response.transactionId
-    # En el primer Scenario Outline
-    # * karate.appendTo('global_transactions', transaction_id)
-    # * print global_transactions
-
+    * print "<=== transaction_id <transaction_id> ===>"
 
     # Query the PostgreSQL database
     * def dbConfig = { username: 'user_app_nebula', password: '$Umdk50$gkZ&1X>y', url: 'jdbc:postgresql://10.86.55.153:31168/proyectonebula2' }
     * def dbQuery = `SELECT response FROM logger.tbl_logger_subject where  logger.tbl_logger_subject.transaction_id = '${transaction_id}'`
-    * def result = karate.callSingle('classpath:SQA/reqres/nats/karate-postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
-    #Espesificar una columna en concreto para no traer toda la informacion y no tener tiempos de carga largos
-
+    * def result = karate.call('classpath:SQA/reqres/nats/karate-postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
     * print "========"
     * print result
 
     # Validar que el campo 'mensaje' contenga la palabra 'exitoso'
-    * match result.result.response contains 'Exitoso'
-
+    * match result.result[0].response contains 'Exitoso'
 
     Examples:
-      | ID         | SUBSCRIBER_NUMBER | Recarga |
-      | 458699652  | 3184823023        | 18000    |
+      | ID        | SUBSCRIBER_NUMBER | Recarga |
+      | 458699652 | 3184823023        | 18000   |
+      | 284040642 | 3167253288        | 10000   |
+      | 284040638 | 3152311339        | 6000    |
+      | 284042602 | 3178429246        | 7000    |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   Scenario Outline: Volver a cargar la información y validar que no se reprocese
@@ -52,21 +63,35 @@ Feature: Testeo Movistar Music
     Given url 'https://nebuladesa.telefonicawebsites.co/apigw/telefonica/v1/nebula-nats-admin/messages'
     And header accept = '*/*'
     And header Content-Type = 'application/json'
-    And request { "subject": "nebula.provisionMovistarMusic","message": {"transactionId": "a38720d4-3030-4c42-9bd1-e55583776ebd","subscriberNumber": "3150000019","offerCode": "5162","dateApplied": "2024-10-31T05:22:00Z","validDays": 30}}
+    And request
+
+    """
+    { "subject": "nebula.provisionMovistarMusic",
+    "message": {
+        "transactionId":<Reference_ID> ,
+        "subscriberNumber": <SUBSCRIBER_NUMBER>,
+        "offerCode": "5162",
+        "allianceCode":"351",
+        "dateApplied": "2024-10-31T05:22:00Z",
+        "validDays": 30
+      }
+    }
+    """
+
     When method POST
     Then status 200
 
   # Realizar una nueva consulta a la base de datos para verificar si la solicitud fue reprocesada
     * def dbConfig = { username: 'user_app_nebula', password: '$Umdk50$gkZ&1X>y', url: 'jdbc:postgresql://10.86.55.153:31168/proyectonebula2' }
-    * def dbQuery = `SELECT "content" FROM logger.tbl_multi_subject where logger.tbl_multi_subject.transaction_id = 'a38720d4-3030-4c42-9bd1-e55583776ebd'`
-    * def result = Java.type('org.example.DbUtils').executeQuery(dbConfig.url, dbConfig.username, dbConfig.password, dbQuery, 'content')
+    * def dbQuery = `SELECT response FROM logger.tbl_logger_subject where logger.tbl_logger_subject.transaction_id =  '${Reference_ID}'`
+    * def result = karate.call('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
-    * print result
+    * print result.result.length
 
   # Verificar que la cuenta de registros sea 1, indicando que no se reprocesó
-    * match result.count == 1
+    * assert result.result.length == 1
 
 
     Examples:
-      | ID        | SUBSCRIBER_NUMBER | Recarga | index |
-      | 458721680 | 3168354565        | 6000    | 0     |
+      | ID        | SUBSCRIBER_NUMBER | Recarga | index | Reference_ID                         |
+      | 284040642 | 3167253288        | 10000    | 3     | cbeb6a4a-d430-463b-adbb-91edb71a9d29 |

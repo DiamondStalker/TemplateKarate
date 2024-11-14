@@ -54,7 +54,7 @@ Feature: Aprovisionamiento de winsport
       | data |
 
 
-  Scenario Outline: Validacion token <transaction_id>
+  Scenario Outline: Validacion token transaction_id => <transaction_id>
 
       # Query the PostgreSQL database
     * def dbConfig = {username: '#(userNameDB)',password: '#(passDB)',url: '#(urlDb)'}
