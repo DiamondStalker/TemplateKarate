@@ -16,13 +16,30 @@ public class RunnerTest {
 //        return Karate.run("classpath:m4p/Acumulador.feature");
 //    }
 //
+//    @Karate.Test
+//    public Karate execute() {
+//        return Karate.run("classpath:m4p/Acumulador.feature").tags("@CompraPaquete").relativeTo(getClass());
+//    }
+//
+//    @Karate.Test
+//    public Karate executes() {
+//        return Karate.run("classpath:m4p/Acumulador.feature").tags("@validaCantidadRegistros").relativeTo(getClass());
+//    }
+
     @Karate.Test
     public Karate execute() {
-        return Karate.run("classpath:m4p/Acumulador.feature").tags("@CompraPaquete").relativeTo(getClass());
+        return Karate.run("classpath:m4p/Acumulador.feature")
+                .tags("@CompraPaquete")
+                .reportDir("target/karate-reports-compra-paquete")
+                .relativeTo(getClass());
     }
 
     @Karate.Test
     public Karate executes() {
-        return Karate.run("classpath:m4p/Acumulador.feature").tags("@validaCantidadRegistros").relativeTo(getClass());
+        return Karate.run("classpath:m4p/Acumulador.feature")
+                .tags("@validaCantidadRegistros")
+                .reportDir("target/karate-reports-valida-registros")
+                .relativeTo(getClass());
     }
+
 }

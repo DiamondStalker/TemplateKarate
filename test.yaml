@@ -1,0 +1,5 @@
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'test surefire-report:report-only'
+    options: '-Dtest=RunnerTest'
