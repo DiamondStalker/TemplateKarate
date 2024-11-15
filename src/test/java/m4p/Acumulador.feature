@@ -3,7 +3,7 @@ Feature: Validar acumulador con raise.level y validar DB
   Background:
 
     #Contine la lista para realizar las compras
-    # * def compras =  read('classpath:m4p/SetDatos.json')
+    #* def compras =  read('classpath:m4p/SetDatos.json')
 
     # Lista con telefono, uuid final y monto esperado de acumulado
     # * def validaciones = read('classpath:m4p/UUIDRiseLevel.json')
@@ -58,7 +58,7 @@ Feature: Validar acumulador con raise.level y validar DB
     # Query the PostgreSQL database
     * def dbConfig = {username: '#(userNameDB)',password: '#(passDB)',url: '#(urlDb)'}
     * def dbQuery = `select * from acumulated_purcahses.monthly where service_number = '${SUBSCRIBER_NUMBER}'`
-    * def response = karate.call('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
+    * def response = karate.call('../org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
     * print " ======== Result DB <SUBSCRIBER_NUMBER> ======== "
@@ -79,7 +79,7 @@ Feature: Validar acumulador con raise.level y validar DB
       # Query the PostgreSQL database
     * def dbConfig = {username: '#(userNameDB)',password: '#(passDB)',url: '#(urlDb)'}
     * def dbQuery = `SELECT * FROM logger.tbl_multi_subject where transaction_id = '${UUID}' and subject = 'nebula.raiseLevel'`
-    * def response = karate.call('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
+    * def response = karate.call('../org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
     * print " ======== Result DB ======== "

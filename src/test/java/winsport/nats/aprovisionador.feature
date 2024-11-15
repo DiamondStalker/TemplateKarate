@@ -2,7 +2,7 @@ Feature: Aprovisionamiento de winsport
 
   Background:
     * def data = read('classpath:winsport/nats/setDatos.json')
-    * def informacion = read('file:C:\\Users\\mate9\\OneDrive - SQA\\TemplateKarate\\target\\output\\informacion.json')
+    * def information = read('file:C:/Users/mate9/Documents/SQA/TemplateKarate/target/output/informacion.json')
 
     * def transactionData = { transactions: [] }
 
@@ -19,8 +19,8 @@ Feature: Aprovisionamiento de winsport
     """
       {
         "amountPackage": "<Recarga>",
-        "purchaseDate": "2024-11-12T05:19:00Z",
-        "referenceId": "11223344556677",
+        "purchaseDate": "+56843-09-05T14:15:09Z",
+        "referenceId": "112233445566778899",
         "requestId": "<ID>",
         "serviceNumber": "<SUBSCRIBER_NUMBER>"
       }
@@ -40,7 +40,7 @@ Feature: Aprovisionamiento de winsport
     # Query the PostgreSQL database
     * def dbConfig = {username: '#(userNameDB)',password: '#(passDB)',url: '#(urlDb)'}
     * def dbQuery = `SELECT * FROM logger.tbl_multi_subject where transaction_id = '${transaction_id}' and subject = 'nebula.sms'`
-    * def response = karate.callSingle('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
+    * def response = karate.call('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
     * print " ======== Result DB ======== "
@@ -54,22 +54,22 @@ Feature: Aprovisionamiento de winsport
       | data |
 
 
-  Scenario Outline: Validacion token transaction_id => <transaction_id>
+  Scenario Outline: Validation token transaction_id => <transaction_id>
 
       # Query the PostgreSQL database
     * def dbConfig = {username: '#(userNameDB)',password: '#(passDB)',url: '#(urlDb)'}
     * def dbQuery = `SELECT * FROM logger.tbl_logger_subject where transaction_id = '${transaction_id}'`
-    * def response = karate.callSingle('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
+    * def response = karate.call('classpath:org/example/postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
     * print " ======== Result DB ======== "
-    * print response.result[0].response
+     * print response.result[0].response
 
     # Validar que el campose response.result tenga un array de 3 o mas campos
     * match response.result[0].response contains '"additionalsNotes":"El procesamiento fue exitoso"'
 
     Examples:
-      | informacion.transactions |
+      | information.transactions |
 
 
   Scenario Outline: Validacion token con cambio de URL para el  transaction_id => <transaction_id>
@@ -89,4 +89,4 @@ Feature: Aprovisionamiento de winsport
     * assert response.result.length == 1
 
     Examples:
-      | informacion.transactions |
+      | information.transactions |
