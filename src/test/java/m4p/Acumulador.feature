@@ -3,10 +3,10 @@ Feature: Validar acumulador con raise.level y validar DB
   Background:
 
     #Contine la lista para realizar las compras
-    * def compras = read('classpath:m4p/setDatos.json')
+    # * def compras =  read('classpath:m4p/SetDatos.json')
 
     # Lista con telefono, uuid final y monto esperado de acumulado
-    * def validaciones = read('classpath:m4p/UUIDRiseLevel.json')
+    # * def validaciones = read('classpath:m4p/UUIDRiseLevel.json')
 
     * def transactionData = { transactions: [] }
 
@@ -49,7 +49,8 @@ Feature: Validar acumulador con raise.level y validar DB
     Then status 200
 
     Examples:
-      | compras |
+      | read('classpath:m4p/SetDatos.json') |
+
 
   @validaCantidadRegistros
   Scenario Outline: Validacion  DB para el numero <SUBSCRIBER_NUMBER> para el transaction_id <UUID>
@@ -69,7 +70,7 @@ Feature: Validar acumulador con raise.level y validar DB
 
 
     Examples:
-      | validaciones |
+      | read('classpath:m4p/UUIDRiseLevel.json') |
 
 
   @validaMontoAcumulado
@@ -89,4 +90,4 @@ Feature: Validar acumulador con raise.level y validar DB
 
 
     Examples:
-      | validaciones |
+      | read('classpath:m4p/UUIDRiseLevel.json') |
