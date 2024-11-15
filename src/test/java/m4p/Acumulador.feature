@@ -51,7 +51,6 @@ Feature: Validar acumulador con raise.level y validar DB
     Examples:
       | compras |
 
-
   @validaCantidadRegistros
   Scenario Outline: Validacion  DB para el numero <SUBSCRIBER_NUMBER> para el transaction_id <UUID>
 

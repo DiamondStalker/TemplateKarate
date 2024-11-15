@@ -20,7 +20,7 @@ Feature: Aprovisionamiento de winsport
       {
         "amountPackage": "<Recarga>",
         "purchaseDate": "2024-11-12T05:19:00Z",
-        "referenceId": "112233445566",
+        "referenceId": "11223344556677",
         "requestId": "<ID>",
         "serviceNumber": "<SUBSCRIBER_NUMBER>"
       }

@@ -1,7 +1,7 @@
 Feature: Testeo Movistar Music
 
   Background:
-    * def global_transactions = []
+    * def transactionData = { transactions: [] }
 
 
   Scenario Outline: Simular compra paquete y revizar en la DB estado Exitoso para el numero <SUBSCRIBER_NUMBER>
@@ -22,7 +22,15 @@ Feature: Testeo Movistar Music
     When method POST
     Then status 200
     * def transaction_id = response.transactionId
-    * print "<=== transaction_id <transaction_id> ===>"
+    * print "<=== transaction_id <transaction_id> ===>",transaction_id
+
+    # Agregar la transacción actual al array de transacciones
+    * transactionData.transactions.push({transaction_id:transaction_id})
+
+    # Guardar el array actualizado en el archivo JSON
+    * karate.write(transactionData, 'output/ValidarTransactionId.json')
+
+
 
     # Query the PostgreSQL database
     * def dbConfig = { username: 'user_app_nebula', password: '$Umdk50$gkZ&1X>y', url: 'jdbc:postgresql://10.86.55.153:31168/proyectonebula2' }
@@ -30,18 +38,17 @@ Feature: Testeo Movistar Music
     * def result = karate.call('classpath:SQA/reqres/nats/karate-postgresql.feature', { dbConfig: dbConfig, dbQuery: dbQuery })
 
     # * print result
-    * print "========"
-    * print result
+    * print "======== RESULT ========"
+    * print transactionData
 
     # Validar que el campo 'mensaje' contenga la palabra 'exitoso'
     * match result.result[0].response contains 'Exitoso'
 
+    * print transactionData
+
     Examples:
       | ID        | SUBSCRIBER_NUMBER | Recarga |
       | 458699652 | 3184823023        | 18000   |
-      | 284040642 | 3167253288        | 10000   |
-      | 284040638 | 3152311339        | 6000    |
-      | 284042602 | 3178429246        | 7000    |
 
 
 
