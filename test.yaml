@@ -1,5 +1,37 @@
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'test surefire-report:report-only'
-    options: '-Dtest=RunnerTest'
+pool:
+  name: Azure Pipelines
+  demands: maven
+
+variables:
+  mavenPOMFile: 'pom.xml'
+
+steps:
+  - task: JavaToolInstaller@0
+    displayName: 'Use Java 21'
+    inputs:
+      versionSpec: 21
+      jdkArchitectureOption: x64
+      jdkSourceOption: PreInstalled
+
+  - task: Maven@3
+    displayName: 'Maven pom.xml'
+    inputs:
+      mavenPomFile: '$(Parameters.mavenPOMFile)'
+      goals: test
+
+  - task: TeamControlium.azure-pipelines-cucumber.PublishMultipleCucumberReport.PublishMultipleCucumberReport@1
+    displayName: 'Publish Cucumber Report'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**/*'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
