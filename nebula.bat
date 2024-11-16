@@ -21,7 +21,7 @@ echo Ejecutando mvn test >> %LOGFILE%
 echo Ejecutando mvn test
 
 REM Echo de la ruta actual concatenada con /target/reports/surefire.html
-set REPORT_PATH=%CD%\target\reports\surefire.html
+set REPORT_PATH=%CD%/target/reports/surefire.html
 echo Ruta completa del reporte: %REPORT_PATH% >> %LOGFILE%
 echo Ruta completa del reporte: %REPORT_PATH%
 
