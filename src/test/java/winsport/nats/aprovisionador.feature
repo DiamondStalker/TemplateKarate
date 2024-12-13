@@ -21,7 +21,7 @@ Feature: Aprovisionamiento de winsport
         "amountPackage": "<Recarga>",
         "purchaseDate": "+56843-09-05T14:15:09Z",
         "referenceId": "112233445566778899",
-        "requestId": "<ID>",
+        "requestId": "<ID>", #/ `Borrarme` => En este valor debe quedar el numero de la oferta para realizar la compra; si el id no pertenece a una alianza este deberia no hacer nada y en los logs de pipeline deberian quedar marcados como error/ warning de que el codigo no es valido
         "serviceNumber": "<SUBSCRIBER_NUMBER>"
       }
     """
